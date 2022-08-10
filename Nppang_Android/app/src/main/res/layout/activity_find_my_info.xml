@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
         android:gravity="center"
-        android:text="이메일/비밀번호 찾기"
+        android:text="비밀번호 재설정"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="30dp" />\
 
@@ -18,10 +18,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:gravity="center"
-        android:text="회원님의 아이디를 찾을 수 있도록\n이름, 휴대전화번호를 입력해주세요."
+        android:text="회원님의 비밀번호 재설정을 위해\n 이메일을 입력해주세요."
         android:textSize="15dp" />
 
     <EditText
+        android:id="@+id/et_findEmail"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginLeft="55dp"
@@ -29,23 +30,7 @@
         android:layout_marginRight="55dp"
         android:background="@drawable/border"
         android:gravity="center_vertical"
-        android:hint="이름"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:paddingLeft="7dp"
-        android:textColorHint="#d9d9d9"
-        android:textSize="12dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginRight="55dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/border"
-        android:gravity="center_vertical"
-        android:hint="휴대전화번호"
+        android:hint="Email"
         android:inputType="text"
         android:minHeight="48dp"
         android:paddingLeft="7dp"
@@ -53,6 +38,7 @@
         android:textSize="12dp" />
 
     <Button
+        android:id="@+id/btn_reset_passwd"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="55dp"
@@ -60,19 +46,7 @@
         android:layout_marginRight="55dp"
         android:background="@color/deeppink"
         android:gravity="center"
-        android:text="이메일 찾기"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginRight="55dp"
-        android:background="@color/deeppink"
-        android:gravity="center"
-        android:text="비밀번호 찾기"
+        android:text="비밀번호 재설정"
         android:textColor="@color/white"
         android:textSize="20dp" />
 

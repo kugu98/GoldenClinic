@@ -9,6 +9,8 @@ import UIKit
 import GoogleSignIn
 import Firebase
 
+let db = Firestore.firestore()
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var tfEmail: UITextField!
@@ -18,10 +20,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        print(UserDefaults.standard.bool(forKey: "autoLogIn"))
         if UserDefaults.standard.bool(forKey: "autoLogIn") {
             if let user = Auth.auth().currentUser {
-                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "category")
+                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "tabBarController")
                 self.navigationController?.pushViewController(pushVC!, animated: true)
             }
         }
@@ -29,6 +30,17 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         GIDSignIn.sharedInstance().presentingViewController=self
+        UIApplication.shared.statusBarStyle = .darkContent
+        navigationItem.hidesBackButton = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 
     @IBAction func googleLoginButtonTapped(_ sender: UIButton) {
@@ -38,7 +50,7 @@ class ViewController: UIViewController {
     @IBAction func btnLogIn(_ sender: UIButton) {
         Auth.auth().signIn(withEmail: tfEmail.text!, password: tfPassword.text!) {(user, error) in
             if user != nil{
-                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "category")
+                let pushVC = self.storyboard?.instantiateViewController(withIdentifier: "tabBarController")
                 self.navigationController?.pushViewController(pushVC!, animated: true)
             }
             else{
@@ -63,7 +75,9 @@ class ViewController: UIViewController {
     }
     
     @IBAction func btnFindInfo(_ sender: UIButton) {
+        pushViewController(vcName: "findInfo")
     }
+    
     func pushViewController(vcName: String){
         let pushVC = self.storyboard?.instantiateViewController(withIdentifier: vcName)
         self.navigationController?.pushViewController(pushVC!, animated: true)

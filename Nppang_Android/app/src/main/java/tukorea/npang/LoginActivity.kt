@@ -1,7 +1,9 @@
 package tukorea.npang
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,7 +16,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.activity_login_layout.*
+import com.google.firebase.firestore.FirebaseFirestore
 import tukorea.npang.databinding.ActivityLoginLayoutBinding
 
 
@@ -27,12 +29,21 @@ class LoginActivity : Activity(), View.OnClickListener {
 
     //Binding
     private lateinit var binding: ActivityLoginLayoutBinding
-
+    val db = FirebaseFirestore.getInstance()    // Firestore 인스턴스 선언
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val sharedPreference = getSharedPreferences("sp1", Context.MODE_PRIVATE)
+        val autologin = sharedPreference.getBoolean("autologin", false)
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (autologin) {
+                val intent5 = Intent(this, CategoryActivity::class.java)
+                startActivity(intent5)
+            }
+        }
+
         //btn_googleSignIn.setOnClickListener (this) // 구글 로그인 버튼
         binding.btnGoogleSignIn.setOnClickListener { signIn() }
         //회원가입이동창
@@ -47,8 +58,14 @@ class LoginActivity : Activity(), View.OnClickListener {
         }
         //로그인버튼 클릭후 카테고리 이동
         binding.btnLogin.setOnClickListener {
-            loginEmail(et_email.text.toString().trim(), et_password.text.toString())
-
+            if (binding.etEmail.length() == 0 || binding.etPassword.length() == 0) {
+                Toast.makeText(this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                loginEmail(
+                    binding.etEmail.text.toString().trim(),
+                    binding.etPassword.text.toString()
+                )
+            }
         }
         //Google 로그인 옵션 구성. requestIdToken 및 Email 요청
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -60,7 +77,17 @@ class LoginActivity : Activity(), View.OnClickListener {
 
         //firebase auth 객체
         firebaseAuth = FirebaseAuth.getInstance()
+
+        //자동로그인
+        binding.keepSignedIn.setOnCheckedChangeListener { buttonView, ischecked ->
+            val editor: SharedPreferences.Editor = sharedPreference.edit()
+            editor.putBoolean("autologin", ischecked)
+
+            editor.commit()
+        }
+
     }
+
 
     // onStart. 유저가 앱에 이미 구글 로그인을 했는지 확인
     public override fun onStart() {
@@ -121,8 +148,8 @@ class LoginActivity : Activity(), View.OnClickListener {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-    // signIn End
 
+    // signIn End
     override fun onClick(p0: View?) {
     }
 
